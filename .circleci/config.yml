@@ -90,14 +90,16 @@ jobs:
       - run:
           name: smoke test
           command: |
-            # URL = grep -m 2 -o '.*' ~/workspace/inventory.txt | tail -n 1
-            # Test if website exists
-            if curl -s --head grep -m 2 -o '.*' ~/workspace/inventory.txt | tail -n 1 
-            then
-              return 0
-            else
-              return 1
-            fi
+            grep -m 2 -o '.*' inventory.txt | tail -n 1 | while read p; 
+            do
+              if curl -s --head "$p"
+              then
+                echo "Pass the smoke testing"
+              else
+                return 1
+              fi
+            done
+
       # - destroy_environment
 
 workflows:
