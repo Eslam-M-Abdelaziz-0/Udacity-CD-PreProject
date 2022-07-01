@@ -72,11 +72,14 @@ jobs:
             # install the dependencies needed for your playbook
             apk add --update ansible
       - attach_workspace:
-          at: ~/
+          at: ~/workspace
+      - run:
+          name: Display the inventory.txt value for test purpose
+          command: cat ~/workspace/inventory.txt
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i ~/inventory.txt ansible/playbook.yml
+            ansible-playbook -i ~/workspace/inventory.txt ansible/playbook.yml
 
 workflows:
   # Name the workflow "welcome"
