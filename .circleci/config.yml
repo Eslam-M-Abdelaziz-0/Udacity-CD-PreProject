@@ -49,11 +49,11 @@ jobs:
       - run:
           name: Create Cloudformation Stack
           command: |
-            echo [all] > ~/inventory.txt && aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> ~/inventory.text
+            echo [all] > ~/inventory.txt && aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> ~/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - inventory.text
+            - inventory.txt
 
   # Exercise: Config and Deployment
   configure_infrastructure:
