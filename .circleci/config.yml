@@ -18,7 +18,7 @@ commands:
           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name servers-udacity-${CIRCLE_WORKFLOW_ID:0:5}
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 jobs:
   # Exercise: Infrastructure Creation
@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Create Cloudformation Stack
           command: |
-            aws cloudformation deploy --template-file infrastructure/servers.yml --stack-name servers-udacity-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
+            aws cloudformation deploy --template-file infrastructure/servers.yml --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
       # Fail the job intentionally to simulate an error.
       # Uncomment the line below if you want to fail the current step
       # - run: return 1
@@ -86,11 +86,10 @@ workflows:
   my_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      # - create_infrastructure
-      # - listEC2IPs:
-      #     requires:
-      #       - create_infrastructure
-      - listEC2IPs
+      - create_infrastructure
+      - listEC2IPs:
+          requires:
+            - create_infrastructure
       - configure_infrastructure:
           requires:
             - listEC2IPs
