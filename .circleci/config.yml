@@ -81,4 +81,6 @@ workflows:
       #     requires:
       #       - create_infrastructure
       - listEC2IPs
-      - configure_infrastructure
+      - configure_infrastructure:
+          requires:
+            - listEC2IPs
