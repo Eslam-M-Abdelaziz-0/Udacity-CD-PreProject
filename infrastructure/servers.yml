@@ -5,6 +5,7 @@ Parameters:
   EnvironmentName:
     Type: String
     Description: 'Project name'
+    Default: 'UdacityProject'
   ImageId:
     Type: String
     Description: 'Linux 2 AMI for Ireland eu-west1 Region'
