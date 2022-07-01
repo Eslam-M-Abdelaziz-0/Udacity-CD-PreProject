@@ -4,7 +4,7 @@
   # hosts: ubuntu
   # hosts: localhost
   # Use the public IP if the VM is already created
-  hosts: ubuntu # all
+  hosts: all
   user: ubuntu # uec2-user
   become: true
   become_method: sudo
