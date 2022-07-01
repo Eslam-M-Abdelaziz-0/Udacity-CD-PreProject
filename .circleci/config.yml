@@ -109,7 +109,7 @@ workflows:
       # - configure_infrastructure:
       #     requires:
       #       - listEC2IPs
-      -listEC2IPs
+      - listEC2IPs
   smoke-testing:
     jobs:
       - smoketest
