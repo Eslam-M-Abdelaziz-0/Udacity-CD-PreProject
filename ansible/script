@@ -5,7 +5,7 @@ aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress
 
 
 cd /
-cd /mnt/e/courses/AWS/Udacity\ Advanced\ DevOps\ Nanodegree/circleCI/test-ansible/
+cd /mnt/e/courses/AWS/Udacity\ Advanced\ DevOps\ Nanodegree/circleCI/ansible/
 
 chmod 400 x.pem
 sudo ansible-playbook main-remote.yml -i inventory.txt --private-key Udacity.pem
