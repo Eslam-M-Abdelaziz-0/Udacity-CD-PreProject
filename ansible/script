@@ -1,0 +1,11 @@
+echo [all] > inventory.txt
+aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> inventory.text
+aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --filters "Name=tag:Project,Values=udacity" --output text >> inventory.txt
+
+
+
+cd /
+cd /mnt/e/courses/AWS/Udacity\ Advanced\ DevOps\ Nanodegree/circleCI/test-ansible/
+
+chmod 400 x.pem
+sudo ansible-playbook main-remote.yml -i inventory.txt --private-key Udacity.pem

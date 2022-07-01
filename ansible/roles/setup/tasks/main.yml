@@ -1,0 +1,34 @@
+---
+- name: 'update apt packages.'
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: 'upgrade apt packages'
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: 'Remove dependencies that are no longer required'
+  become: true
+  apt:
+    autoremove: yes
+
+- name: 'Install apache2'
+  become: true
+  apt:
+    name: ['apache2']
+    state: latest
+    update_cache: yes
+
+- name: 'Install index.html page'
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    backup: yes
+
+- name: 'Starting apache2'
+  become: true
+  service:
+    name: 'apache2'
+    state: started

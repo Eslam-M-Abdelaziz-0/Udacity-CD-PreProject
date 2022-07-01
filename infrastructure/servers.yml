@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template to Create an EC2 instance, EIP and associate with instance
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Description: 'Project name'
+  ImageId:
+    Type: String
+    Description: 'Linux 2 AMI for Ireland eu-west1 Region'
+    Default: 'ami-0729e439b6769d6ab'
+  InstanceType:
+    Type: String
+    Description: Choosing  t2 micro because it is free
+    Default: t2.micro
+  KeyName:
+    Description: SSH Keypair to login to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: Udacity
+
+Resources:
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+  DemoInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroups: [!Ref 'InstanceSecurityGroup']
+
+  #Allocate an Elastic IP in your Account
+  DemoElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref DemoInstance
+
+Outputs:
+  DemoInstanceId:
+    Description: Instance Id
+    Value: !Ref DemoInstance

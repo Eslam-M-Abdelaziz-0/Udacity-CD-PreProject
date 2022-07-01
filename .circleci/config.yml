@@ -18,7 +18,7 @@ commands:
           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name myStack2-${CIRCLE_WORKFLOW_ID:0:5}
+            aws cloudformation delete-stack --stack-name servers-udacity-${CIRCLE_WORKFLOW_ID:0:5}
 
 jobs:
   # Exercise: Infrastructure Creation
@@ -31,16 +31,34 @@ jobs:
       - run:
           name: Create Cloudformation Stack
           command: |
-            aws cloudformation deploy --template-file template.yml --stack-name myStack2-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
+            aws cloudformation deploy --template-file infrastructure/servers.yml --stack-name servers-udacity-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
       # Fail the job intentionally to simulate an error.
       # Uncomment the line below if you want to fail the current step
-      - run: return 1
+      # - run: return 1
       - destroy_environment
+
+  # Exercise: Config and Deployment
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ['64:32:93:db:6a:cd:94:20:f5:68:1f:fc:9e:15:d1:cc'] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install Ansible
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory.txt ansible/playbook.yml
 
 workflows:
   # Name the workflow "welcome"
   my_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      - create_infrastructure
-      # - configure_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure
