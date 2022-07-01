@@ -31,7 +31,6 @@ jobs:
       # Uncomment the line below if you want to fail the current step
       # - run: return 1
       - destroy_environment
-        when: on_fail
 
   listEC2IPs:
     docker:
@@ -100,7 +99,6 @@ jobs:
               return 1
             fi
       # - destroy_environment
-        # when: on_fail
 
 workflows:
   deploying:
