@@ -37,6 +37,20 @@ jobs:
       # - run: return 1
       - destroy_environment
 
+  listEC2IPs:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: |
+            echo [all] > ~/inventory.txt && aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output text >> ~/inventory.text
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - inventory.text
+
   # Exercise: Config and Deployment
   configure_infrastructure:
     docker:
@@ -50,15 +64,21 @@ jobs:
           command: |
             # install the dependencies needed for your playbook
             apk add --update ansible
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i ansible/inventory.txt ansible/playbook.yml
+            ansible-playbook -i ~/inventory.txt ansible/playbook.yml
 
 workflows:
   # Name the workflow "welcome"
   my_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      - create_infrastructure
-      # - configure_infrastructure
+      # - create_infrastructure
+      # - listEC2IPs:
+      #     requires:
+      #       - create_infrastructure
+      - listEC2IPs
+      - configure_infrastructure
