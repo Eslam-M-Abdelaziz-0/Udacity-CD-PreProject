@@ -100,7 +100,7 @@ jobs:
               fi
             done
 
-      # - destroy_environment
+      - destroy_environment
 
 workflows:
   deploying:
