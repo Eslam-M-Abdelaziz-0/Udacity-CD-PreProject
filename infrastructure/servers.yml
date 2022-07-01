@@ -37,7 +37,7 @@ Resources:
           ToPort: 443
           CidrIp: 0.0.0.0/0
 
-  DemoInstance:
+  ServerInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
       ImageId: !Ref ImageId
@@ -50,9 +50,14 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
-      InstanceId: !Ref DemoInstance
+      InstanceId: !Ref ServerInstance
 
 Outputs:
-  DemoInstanceId:
+  ServerInstanceId:
     Description: Instance Id
-    Value: !Ref DemoInstance
+    Value: !Ref ServerInstance
+  PublicIp:
+    Description: Server Public IP
+    Value: !GetAtt ServerInstance.PublicIp
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicIp'
