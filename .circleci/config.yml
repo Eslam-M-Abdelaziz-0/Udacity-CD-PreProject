@@ -90,9 +90,9 @@ jobs:
       - run:
           name: smoke test
           command: |
-            URL = grep -m 2 -o '.*' ~/workspace/inventory.txt | tail -n 1
+            # URL = grep -m 2 -o '.*' ~/workspace/inventory.txt | tail -n 1
             # Test if website exists
-            if curl -s --head ${URL} 
+            if curl -s --head grep -m 2 -o '.*' ~/workspace/inventory.txt | tail -n 1 
             then
               return 0
             else
@@ -103,13 +103,17 @@ jobs:
 workflows:
   deploying:
     jobs:
-      - create_infrastructure
-      - listEC2IPs:
-          requires:
-            - create_infrastructure
-      - configure_infrastructure:
-          requires:
-            - listEC2IPs
+      # - create_infrastructure
+      # - listEC2IPs:
+      #     requires:
+      #       - create_infrastructure
+      # - configure_infrastructure:
+      #     requires:
+      #       - listEC2IPs
+      # - smoke_test:
+      #     requires:
+      #       - configure_infrastructure
+      - listEC2IPs
       - smoke_test:
           requires:
-            - configure_infrastructure
+            - listEC2IPs
