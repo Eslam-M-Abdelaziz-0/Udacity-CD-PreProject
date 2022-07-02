@@ -133,7 +133,7 @@ jobs:
             aws cloudformation deploy \
             --template-file infrastructure/cloudfront.yml \
             --stack-name production-distro \
-            --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com"
+            --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID}"
 
   # Exercise: Promote to Production - Job 2
   # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
@@ -172,7 +172,7 @@ workflows:
       - promote_to_production:
           requires:
             - create_and_deploy_front_end
-      - get_last_deployment_id
+      # - get_last_deployment_id
       # - listEC2IPs
       # - smoke_test:
       #     requires:
