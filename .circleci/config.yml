@@ -119,6 +119,28 @@ jobs:
       # Uncomment the step below if yoou wish to upload all contents of the current directory to the new S3 bucket
       - run: aws s3 sync infrastructure/front-end/ s3://mybucket-${CIRCLE_WORKFLOW_ID} --delete
 
+  # Exercise: Promote to Production - Job 2
+  # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
+  get_last_deployment_id:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - run:
+          name: Fetch and save the old pipeline ID (bucket name) responsible for the last release.
+          command: |
+            aws cloudformation \
+            list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
+            --no-paginate --output text > ~/textfile.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - textfile.txt
+      - run:
+          name: Displaying the contents of the textfile.txt at the workspace
+          command: cat ~/textfile.txt
+
 workflows:
   deploying:
     jobs:
@@ -132,7 +154,8 @@ workflows:
       # - smoke_test:
       #     requires:
       #       - configure_infrastructure
-      - create_and_deploy_front_end
+      # - create_and_deploy_front_end
+      - get_last_deployment_id
       # - listEC2IPs
       # - smoke_test:
       #     requires:
